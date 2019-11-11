@@ -1,4 +1,4 @@
-# Install script for directory: /home/torresf/Documents/geometry/tp2
+# Install script for directory: /home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/torresf/Documents/geometry/tp2/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

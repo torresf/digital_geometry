@@ -14,6 +14,26 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
+
+template <class T>
+size_t getArea(T &object) {
+    // make a Kovalevsky-Khalimsky space
+    KSpace t_KSpace;
+    t_KSpace.init(object.domain().lowerBound() - Point(2,2), object.domain().upperBound() + Point(2,2), true);
+    // set an adjacency (4-connectivity)
+    SurfelAdjacency<2> sAdj(true);
+
+    // search for one boundary element
+    SCell bel = Surfaces<KSpace>::findABel(t_KSpace, object.pointSet(), 10000);
+
+    // boundary tracking
+    std::vector<Z2i::Point> t_BoundaryPoints;
+    Surfaces<Z2i::KSpace>::track2DBoundaryPoints(t_BoundaryPoints, t_KSpace, sAdj, object.pointSet(), bel);
+
+    return t_BoundaryPoints.size();
+
+}
+
 template <class T>
 Curve getBoundary(T & object)
 {
@@ -70,18 +90,60 @@ int main(int argc, char** argv)
     bdiamond8_4.writeComponents(inserter8_4);
 
     // for each grain, make the boundary tracking, calculate the area, perimeter, etc....
-    std::cout << "Get the 50th grain boundary." << endl;
-    Z2i::Curve c = getBoundary(objects4_8[50]);
+
+    int index = 0;
+    float areaSum = 0;
+    float count = objects4_8.size();
+    float areaMean;
+    for(auto object4_8 : objects4_8) {
+      try {
+        areaSum += getArea(object4_8);
+      } catch(std::exception e) {
+        std::cout << "at [" << index << "] : " << e.what() << std::endl;
+        --count;
+      }
+      ++index;
+    }
+
+    areaMean = areaSum / count;
+
+    std::cout << "area mean : " << areaMean << std::endl;
+
+    //stock indexes of valid grains
+    std::vector<int> indexes;
+    index = 0;
+    for(auto object4_8 : objects4_8) {
+      try {
+        float area = getArea(object4_8);
+        if(area >= areaMean) {
+          indexes.push_back(index);
+        }
+      } catch(std::exception e) {
+        std::cout << "at [" << index << "] : " << e.what() << std::endl;
+      }
+      ++index;
+    }
+
+    //for each valid grain
+    for(auto i : indexes) {
+      try {
+        Z2i::Curve c = getBoundary(objects4_8[i]);
+
+        // make a pdf file of the object
+        Board2D aBoard;
+        std::stringstream filename;
+        filename << "export/boundary_" << i << ".pdf";
+        aBoard << objects4_8[i];
+        aBoard << c;
+        aBoard.saveCairo(filename.str().c_str(), Board2D::CairoPDF);
+      } catch(std::exception e) {
+        std::cout << "at [" << i << "] : " << e.what() << std::endl;
+      }
+    }
 
 		std::cout << "Grains count in (4,8) adjacency : " << objects4_8.size() << std::endl;
 		std::cout << "Grains count in (8,4) adjacency : " << objects8_4.size() << std::endl;
 		std::cout << "well-composed : " << ((objects4_8.size() != objects8_4.size()) ? "false" : "true") << std::endl;
-
-    // make a pdf file of the chosen objects[50]
-    Board2D aBoard;
-    aBoard << objects4_8[50];
-    aBoard << c;
-    aBoard.saveCairo("boundaryCurve.pdf", Board2D::CairoPDF);
 
     return 0;
 }

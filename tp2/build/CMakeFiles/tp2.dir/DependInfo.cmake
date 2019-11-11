@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/torresf/Documents/geometry/tp2/main.cpp" "/home/torresf/Documents/geometry/tp2/build/CMakeFiles/tp2.dir/main.cpp.o"
+  "/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/main.cpp" "/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/build/CMakeFiles/tp2.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
