@@ -16,7 +16,7 @@ using namespace Z2i;
 
 
 template <class T>
-size_t getArea(T &object) {
+size_t getPerimeter(T &object) {
     // make a Kovalevsky-Khalimsky space
     KSpace t_KSpace;
     t_KSpace.init(object.domain().lowerBound() - Point(2,2), object.domain().upperBound() + Point(2,2), true);
@@ -32,6 +32,12 @@ size_t getArea(T &object) {
 
     return t_BoundaryPoints.size();
 
+}
+
+template <class T>
+size_t getArea(T &object) {
+
+    return object.size();
 }
 
 template <class T>
