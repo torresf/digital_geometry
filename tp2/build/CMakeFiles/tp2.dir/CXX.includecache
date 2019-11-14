@@ -29,6 +29,12 @@ DGtal/topology/helpers/Surfaces.h
 -
 DGtal/io/Color.h
 /home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/io/Color.h
+DGtal/geometry/curves/GreedySegmentation.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/geometry/curves/GreedySegmentation.h
+DGtal/geometry/curves/ArithmeticalDSSComputer.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/geometry/curves/ArithmeticalDSSComputer.h
+DGtal/geometry/curves/estimation/DSSLengthEstimator.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/geometry/curves/estimation/DSSLengthEstimator.h
 
 /usr/include/cairo/cairo-deprecated.h
 
@@ -1196,6 +1202,40 @@ DGtal/kernel/NumberTraits.h
 DGtal/base/OneItemOutputIterator.h
 /usr/local/include/DGtal/geometry/curves/DGtal/base/OneItemOutputIterator.h
 
+/usr/local/include/DGtal/geometry/curves/CForwardSegmentComputer.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/Common.h
+DGtal/geometry/curves/CIncrementalSegmentComputer.h
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/CIncrementalSegmentComputer.h
+
+/usr/local/include/DGtal/geometry/curves/CIncrementalSegmentComputer.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/Common.h
+DGtal/geometry/curves/CSegmentFactory.h
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/CSegmentFactory.h
+
+/usr/local/include/DGtal/geometry/curves/CSegment.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/Common.h
+boost/concept_check.hpp
+/usr/local/include/DGtal/geometry/curves/boost/concept_check.hpp
+DGtal/base/ConceptUtils.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/ConceptUtils.h
+
+/usr/local/include/DGtal/geometry/curves/CSegmentFactory.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/Common.h
+DGtal/geometry/curves/CSegment.h
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/CSegment.h
+
 /usr/local/include/DGtal/geometry/curves/FP.h
 iostream
 -
@@ -1271,6 +1311,22 @@ DGtal/geometry/curves/FreemanChain.ih
 /usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/FreemanChain.ih
 
 /usr/local/include/DGtal/geometry/curves/FreemanChain.ih
+
+/usr/local/include/DGtal/geometry/curves/GreedySegmentation.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/DGtal/base/Common.h
+DGtal/geometry/curves/SegmentComputerUtils.h
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/SegmentComputerUtils.h
+DGtal/geometry/curves/CForwardSegmentComputer.h
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/CForwardSegmentComputer.h
+DGtal/geometry/curves/GreedySegmentation.ih
+/usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/GreedySegmentation.ih
+
+/usr/local/include/DGtal/geometry/curves/GreedySegmentation.ih
+cstdlib
+-
 
 /usr/local/include/DGtal/geometry/curves/GridCurve.h
 iostream
@@ -1373,6 +1429,22 @@ DGtal/geometry/curves/StabbingLineComputer.ih
 /usr/local/include/DGtal/geometry/curves/DGtal/geometry/curves/StabbingLineComputer.ih
 
 /usr/local/include/DGtal/geometry/curves/StabbingLineComputer.ih
+cstdlib
+-
+
+/usr/local/include/DGtal/geometry/curves/estimation/DSSLengthEstimator.h
+iostream
+-
+DGtal/base/Common.h
+/usr/local/include/DGtal/geometry/curves/estimation/DGtal/base/Common.h
+DGtal/geometry/curves/GreedySegmentation.h
+/usr/local/include/DGtal/geometry/curves/estimation/DGtal/geometry/curves/GreedySegmentation.h
+DGtal/geometry/curves/ArithmeticalDSSComputer.h
+/usr/local/include/DGtal/geometry/curves/estimation/DGtal/geometry/curves/ArithmeticalDSSComputer.h
+DGtal/geometry/curves/estimation/DSSLengthEstimator.ih
+/usr/local/include/DGtal/geometry/curves/estimation/DGtal/geometry/curves/estimation/DSSLengthEstimator.ih
+
+/usr/local/include/DGtal/geometry/curves/estimation/DSSLengthEstimator.ih
 cstdlib
 -
 

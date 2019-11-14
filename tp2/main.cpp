@@ -9,11 +9,17 @@
 #include <DGtal/topology/SurfelAdjacency.h>
 #include <DGtal/topology/helpers/Surfaces.h>
 #include "DGtal/io/Color.h"
+#include "DGtal/geometry/curves/GreedySegmentation.h"
+#include "DGtal/geometry/curves/ArithmeticalDSSComputer.h"
+#include "DGtal/geometry/curves/estimation/DSSLengthEstimator.h"
 
 using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
+typedef std::vector<Z2i::Point> Range; 
+typedef ArithmeticalDSSComputer<Range::const_iterator, int, 4> SegmentComputer;
+typedef GreedySegmentation<SegmentComputer> Segmentation;
 
 template <class T>
 size_t getPerimeter(T &object) {
@@ -34,10 +40,78 @@ size_t getPerimeter(T &object) {
 
 }
 
+template<class T>
+double getPolygonalPerimeter(T &object, Board2D &aBoard) {
+
+  // make a Kovalevsky-Khalimsky space
+  KSpace t_KSpace;
+  t_KSpace.init(object.domain().lowerBound() - Point(2,2), object.domain().upperBound() + Point(2,2), true);
+  // set an adjacency (4-connectivity)
+  SurfelAdjacency<2> sAdj(true);
+
+  // search for one boundary element
+  SCell bel = Surfaces<KSpace>::findABel(t_KSpace, object.pointSet(), 10000);
+
+  // boundary tracking
+  std::vector<Z2i::Point> t_BoundaryPoints;
+  Surfaces<Z2i::KSpace>::track2DBoundaryPoints(t_BoundaryPoints, t_KSpace, sAdj, object.pointSet(), bel);
+
+  //Segmentation
+  SegmentComputer recognitionAlgorithm;
+  Segmentation theSegmentation(t_BoundaryPoints.begin(), t_BoundaryPoints.end(), recognitionAlgorithm);
+
+  // Draw each segment
+  for ( auto it = theSegmentation.begin(), itEnd = theSegmentation.end(); it != itEnd; ++it )
+    {
+      aBoard << SetMode( "ArithmeticalDSS", "Points" ) << it->primitive();
+
+      aBoard << SetMode( "ArithmeticalDSS", "BoundingBox" )
+        << CustomStyle( "ArithmeticalDSS/BoundingBox", 
+                        new CustomPenColor( Color::Blue ) )
+        << it->primitive();
+    }
+  
+  //length estimation based on a DSS segmentation
+  DSSLengthEstimator< Range::const_iterator > DSSlength;
+  DSSlength.init(1, t_BoundaryPoints.begin(), t_BoundaryPoints.end());
+  //std::cout << theDecomposition.size() == DSSlength.eval() << std::endl;
+
+  return DSSlength.eval();
+}
+
 template <class T>
 size_t getArea(T &object) {
 
     return object.size();
+}
+
+template<class T>
+double getPolygonalArea(T &object) {
+  /*std::vector<Range> r;
+  double sumPolygonalArea = 0.;
+
+  double y = (*object.begin())[1];
+  Range line;
+  for(auto it = object.begin(), itEnd = object.end(); it != itEnd; ++it) {
+    Z2i::Point p(*it);
+    if(p[1] != y) {
+      r.push_back(line);
+      line.clear();
+      line.shrink_to_fit();
+      y = p[1];
+    }
+    line.push_back(p);
+  }
+  r.push_back(line);
+
+  for(Range range : r) {
+    DSSLengthEstimator< Range::const_iterator> DSSlength;
+    DSSlength.init(1, range.begin(), range.end());
+    sumPolygonalArea += DSSlength.eval();
+  }*/
+
+  
+  return 0.;
 }
 
 template <class T>
@@ -104,7 +178,7 @@ int main(int argc, char** argv)
     for(auto object4_8 : objects4_8) {
       try {
         areaSum += getArea(object4_8);
-      } catch(std::exception e) {
+      } catch(std::exception &e) {
         std::cout << "at [" << index << "] : " << e.what() << std::endl;
         --count;
       }
@@ -124,7 +198,7 @@ int main(int argc, char** argv)
         if(area >= areaMean) {
           indexes.push_back(index);
         }
-      } catch(std::exception e) {
+      } catch(std::exception &e) {
         std::cout << "at [" << index << "] : " << e.what() << std::endl;
       }
       ++index;
@@ -133,22 +207,33 @@ int main(int argc, char** argv)
     //for each valid grain
     for(auto i : indexes) {
       try {
-        Z2i::Curve c = getBoundary(objects4_8[i]);
+        //Z2i::Curve c = getBoundary(objects4_8[i]);
 
         // make a pdf file of the object
         Board2D aBoard;
+
+        std::cout << "Perimeter : " << getPerimeter(objects4_8[i]) << std::endl;
+
+        std::cout << "Area : " << getArea(objects4_8[i]) << std::endl;
+
+        std::cout << "Polygonal Perimeter : " << getPolygonalPerimeter(objects4_8[i], aBoard) << std::endl;
+
+        std::cout << "Polygonal Area : " << getPolygonalArea(objects4_8[i]) << std::endl;
+
         std::stringstream filename;
         filename << "export/boundary_" << i << ".pdf";
-        aBoard << objects4_8[i];
-        aBoard << c;
+        //aBoard << objects4_8[i];
+        //aBoard << c;
         aBoard.saveCairo(filename.str().c_str(), Board2D::CairoPDF);
-      } catch(std::exception e) {
+      } catch(std::exception &e) {
         std::cout << "at [" << i << "] : " << e.what() << std::endl;
       }
     }
 
 		std::cout << "Grains count in (4,8) adjacency : " << objects4_8.size() << std::endl;
 		std::cout << "Grains count in (8,4) adjacency : " << objects8_4.size() << std::endl;
+		std::cout << "Grains count as valid : " << indexes.size() << std::endl;
+
 		std::cout << "well-composed : " << ((objects4_8.size() != objects8_4.size()) ? "false" : "true") << std::endl;
 
     return 0;

@@ -123,12 +123,18 @@ CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/Arithmet
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/ArithmeticalDSSConvexHull.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/ArithmeticalDSSFactory.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/ArithmeticalDSSFactory.ih
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/CForwardSegmentComputer.h
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/CIncrementalSegmentComputer.h
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/CSegment.h
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/CSegmentFactory.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FP.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FP.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FrechetShortcut.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FrechetShortcut.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FreemanChain.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/FreemanChain.ih
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/GreedySegmentation.h
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/GreedySegmentation.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/GridCurve.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/GridCurve.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/SegmentComputerUtils.h
@@ -136,6 +142,8 @@ CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/Stabbing
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/StabbingCircleComputer.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/StabbingLineComputer.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/StabbingLineComputer.ih
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/estimation/DSSLengthEstimator.h
+CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/curves/estimation/DSSLengthEstimator.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/surfaces/ParallelStrip.h
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/surfaces/ParallelStrip.ih
 CMakeFiles/tp2.dir/main.cpp.o: /usr/local/include/DGtal/geometry/tools/CPolarPointComparator2D.h
