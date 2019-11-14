@@ -1,0 +1,20 @@
+PROJECT(tp3)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+FIND_PACKAGE(DGtal REQUIRED)
+INCLUDE_DIRECTORIES(${DGTAL_INCLUDE_DIRS})
+LINK_DIRECTORIES(${DGTAL_LIBRARY_DIRS})
+
+# include eigen
+message("look for lib eigen ..." )
+find_package(Eigen3 REQUIRED)
+if(${EIGEN3_FOUND})
+    message(STATUS "lib EIGEN3 found")
+    message(STATUS "  version " ${EIGEN3_VERSION_STRING})
+    message(STATUS "  include " ${EIGEN3_INCLUDE_DIR})
+endif()
+
+# link libs
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+ADD_EXECUTABLE(tp3 main)
+TARGET_LINK_LIBRARIES(tp3 ${DGTAL_LIBRARIES})
