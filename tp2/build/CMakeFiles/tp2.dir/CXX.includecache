@@ -35,6 +35,8 @@ DGtal/geometry/curves/ArithmeticalDSSComputer.h
 /home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/geometry/curves/ArithmeticalDSSComputer.h
 DGtal/geometry/curves/estimation/DSSLengthEstimator.h
 /home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp2/DGtal/geometry/curves/estimation/DSSLengthEstimator.h
+cmath
+-
 
 /usr/include/cairo/cairo-deprecated.h
 

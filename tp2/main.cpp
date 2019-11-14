@@ -12,6 +12,7 @@
 #include "DGtal/geometry/curves/GreedySegmentation.h"
 #include "DGtal/geometry/curves/ArithmeticalDSSComputer.h"
 #include "DGtal/geometry/curves/estimation/DSSLengthEstimator.h"
+#include <cmath>
 
 using namespace std;
 using namespace DGtal;
@@ -204,6 +205,9 @@ int main(int argc, char** argv)
       ++index;
     }
 
+    std::cout << "Perimeter" << "\t" << "Area" << "\t" << "Circularity" << "\t" << "Polygonal Perimeter" << std::endl;
+
+
     //for each valid grain
     for(auto i : indexes) {
       try {
@@ -212,13 +216,16 @@ int main(int argc, char** argv)
         // make a pdf file of the object
         Board2D aBoard;
 
-        std::cout << "Perimeter : " << getPerimeter(objects4_8[i]) << std::endl;
+        double perimeter = getPerimeter(objects4_8[i]);
+        double area = getArea(objects4_8[i]);
 
-        std::cout << "Area : " << getArea(objects4_8[i]) << std::endl;
+        std::cout << perimeter << "\t";
 
-        std::cout << "Polygonal Perimeter : " << getPolygonalPerimeter(objects4_8[i], aBoard) << std::endl;
+        std::cout << area << "\t";
 
-        std::cout << "Polygonal Area : " << getPolygonalArea(objects4_8[i]) << std::endl;
+        std::cout << 4 * M_PI * area / (perimeter * perimeter) << "\t";
+        
+        std::cout << getPolygonalPerimeter(objects4_8[i], aBoard) << std::endl;
 
         std::stringstream filename;
         filename << "export/boundary_" << i << ".pdf";
