@@ -28,7 +28,13 @@ typedef Domain::ConstIterator DomainConstIterator;
 typedef DigitalSetSelector< Domain, BIG_DS+HIGH_BEL_DS >::Type DigitalSet;
 typedef Object<DT4_8, DigitalSet> ObjectType4_8;
 
-Eigen::Affine2d Find2DAffineTransform(Eigen::Matrix2Xd in, Eigen::Matrix2Xd out);
+Eigen::Affine2d Find2DAffineTransform(const Eigen::Matrix2Xd &_in, const Eigen::Matrix2Xd &_out);
+
+std::string toString(const Eigen::MatrixXd& mat){
+    std::stringstream ss;
+    ss << mat;
+    return ss.str();
+}
 
 template <class T>
 Curve getBoundary(T & object)
@@ -68,38 +74,49 @@ class Component {
     public:
     Component() = delete;
     Component(std::string filePath) {
-          // read an image
-        TypeImage image = PGMReader<TypeImage>::importPGM (filePath);
+      // read an image
+      TypeImage image = PGMReader<TypeImage>::importPGM (filePath);
 
-        // make a digital set from the image
-        Z2i::DigitalSet set2d (image.domain());                                 // Create a digital set of proper size
-        SetFromImage<Z2i::DigitalSet>::append<TypeImage>(set2d, image, 1, 255);     //populate a digital set from the input image
+      // make a digital set from the image
+      Z2i::DigitalSet set2d (image.domain());                                 // Create a digital set of proper size
+      SetFromImage<Z2i::DigitalSet>::append<TypeImage>(set2d, image, 1, 255);     //populate a digital set from the input image
 
-        // create Eigen matrix
-        Z2i::Point end(*image.domain().rbegin());
-        std::cout << end << std::endl;
-        Eigen::Matrix2Xi m(int(end[0] + 1), int(end[1] + 1));
+      // create a digital object from the digital set
+      std::back_insert_iterator< std::vector< ObjectType4_8 > > inserter( objects );
 
+      // obtain the connected components with a chosen adjacency pair
+      ObjectType4_8 bdiamond(dt4_8, set2d);      // (4,8) adjacency
+      bdiamond.writeComponents(inserter);
 
-        // create a digital object from the digital set
-        std::back_insert_iterator< std::vector< ObjectType4_8 > > inserter( objects );
+      if(objects.size() == 0) {
+        throw new std::out_of_range("No component found !");
+      }
 
-        // obtain the connected components with a chosen adjacency pair
-        ObjectType4_8 bdiamond(dt4_8, set2d);      // (4,8) adjacency
-        bdiamond.writeComponents(inserter);
-    };
-
-    Z2i::Point getCenterOfMass() {
-        Z2i::Point p(0, 0);
-        for(auto it = objects[0].begin(), itEnd = objects[0].end(); it != itEnd; ++it) {
-            p += *it;
-        }
-
-        return p / int(objects[0].size());
+      std::cout << objects[0].size() << std::endl;
     }
 
-    std::vector< ObjectType4_8 > objects; // All conected components are going to be stored in it
-    Eigen::Matrix2Xi matrix;
+    const Z2i::Point getCenterOfMass() const {
+      Z2i::Point p(0, 0);
+      for(auto it = objects[0].begin(), itEnd = objects[0].end(); it != itEnd; ++it) {
+          p += *it;
+      }
+
+      return p / int(objects[0].size());
+    }
+
+
+    const Eigen::Matrix2Xd getMatrixOfPoints() const {
+      Eigen::Matrix2Xd m(2, objects[0].size());
+      int index = 0;
+      for(auto it = objects[0].begin(), itEnd = objects[0].end(); it != itEnd; ++it) {
+          m(0, index) = double((*it)[0]);
+          m(1, index) = double((*it)[1]);
+          ++index;
+      }
+      return m;
+    }
+
+    std::vector< ObjectType4_8 > objects; // All connected components are going to be stored in it
 };
 
 
@@ -129,6 +146,10 @@ int main(int argc, char** argv)
     aBoard.drawCircle(centerOfMass1[0], centerOfMass1[1], 5);
     aBoard.saveCairo("boundaryCurve.pdf",Board2D::CairoPDF);
 
+    Eigen::Matrix3d affine = Find2DAffineTransform(cle0.getMatrixOfPoints(), cle1.getMatrixOfPoints()).matrix();
+
+    std::cout << affine << std::endl;
+
     return 0;
 }
 
@@ -142,15 +163,23 @@ int main(int argc, char** argv)
 //https://github.com/oleg-alexandrov/projects/blob/master/eigen/Kabsch.cpp
 
 // The input 2D points are stored as columns.
-Eigen::Affine2d Find2DAffineTransform(Eigen::Matrix2Xd in, Eigen::Matrix2Xd out) {
+Eigen::Affine2d Find2DAffineTransform(const Eigen::Matrix2Xd &_in, const Eigen::Matrix2Xd &_out) {
 
   // Default output
   Eigen::Affine2d A;
   A.linear() = Eigen::Matrix2d::Identity(2, 2);
   A.translation() = Eigen::Vector2d::Zero();
 
-  if (in.cols() != out.cols())
-    throw "Find2DAffineTransform(): input data mis-match";
+  Eigen::Matrix2Xd in = _in;
+  Eigen::Matrix2Xd out = _out;
+
+  if(in.cols() > out.cols()) { 
+    in.resize(2, out.cols());
+  } else {
+    out.resize(2, in.cols());
+  }
+
+  std::cout << in.cols() << " " << out.cols() << std::endl;
 
   // First find the scale, by finding the ratio of sums of some distances,
   // then bring the datasets to the same scale.
@@ -189,7 +218,7 @@ Eigen::Affine2d Find2DAffineTransform(Eigen::Matrix2Xd in, Eigen::Matrix2Xd out)
   else
     d = -1.0;
   Eigen::Matrix2d I = Eigen::Matrix2d::Identity(2, 2);
-  I(2, 2) = d;
+  I(1, 1) = d;
   Eigen::Matrix2d R = svd.matrixV() * I * svd.matrixU().transpose();
 
   // The final transform
