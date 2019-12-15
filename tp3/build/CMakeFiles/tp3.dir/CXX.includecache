@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/nicolas/Documents/Master/Géométrie Discrète/TP3/main.cpp
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp3/main.cpp
 DGtal/base/Common.h
 -
 DGtal/helpers/StdDefs.h
@@ -14,9 +14,9 @@ DGtal/helpers/StdDefs.h
 DGtal/images/ImageSelector.h
 -
 DGtal/io/readers/PGMReader.h
-/home/nicolas/Documents/Master/Géométrie Discrète/TP3/DGtal/io/readers/PGMReader.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp3/DGtal/io/readers/PGMReader.h
 DGtal/io/writers/GenericWriter.h
-/home/nicolas/Documents/Master/Géométrie Discrète/TP3/DGtal/io/writers/GenericWriter.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp3/DGtal/io/writers/GenericWriter.h
 DGtal/images/imagesSetsUtils/SetFromImage.h
 -
 DGtal/io/boards/Board2D.h
@@ -28,7 +28,7 @@ DGtal/topology/SurfelAdjacency.h
 DGtal/topology/helpers/Surfaces.h
 -
 DGtal/io/Color.h
-/home/nicolas/Documents/Master/Géométrie Discrète/TP3/DGtal/io/Color.h
+/home/nicolas/Documents/Master/Géométrie Discrète/digital_geometry/tp3/DGtal/io/Color.h
 Eigen/Dense
 -
 Eigen/Geometry
