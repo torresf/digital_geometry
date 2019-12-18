@@ -47,28 +47,26 @@ public:
 
     // STEP 2::4
     // If there are several components, take the largest one.
-    if (this->objects.size() > 1)
-    {
-      cout << "Selecting the biggest object" << endl;
-      int maxPixel = 0;
-      int maxPixelIndex = 0;
-      for (int i = 0; i < this->objects.size(); i++)
-      {
-        ObjectType4_8 o = this->objects[i];
-        if (o.size() > maxPixel)
-        {
-          maxPixel = o.size();
-          maxPixelIndex = i;
+    this->largestObject = this->getLargestObject();
+    cout << "Largest object pixels amount is " << this->largestObject.size() << endl;
+
+  }
+
+  const ObjectType4_8 getLargestObject() const
+  {
+    ObjectType4_8 largestObject;
+    if (this->objects.size() > 1) {
+      int maxArea = 0;
+      for (auto o : this->objects) {
+        if (o.size() > maxArea) {
+          maxArea = o.size();
+          largestObject = o;
         }
       }
-      this->largestObject = this->objects[maxPixelIndex];
+    } else {
+      largestObject = this->objects[0];
     }
-    else
-    {
-      this->largestObject = this->objects[0];
-    }
-
-    cout << "Largest object pixels amount is " << this->objects[0].size() << endl;
+    return largestObject;
   }
 
   const Z2i::Point getCenterOfMass() const
