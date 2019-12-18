@@ -14,7 +14,9 @@ if(${EIGEN3_FOUND})
 endif()
 
 # link libs
-include_directories(${EIGEN3_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 
 ADD_EXECUTABLE(tp3 main)
+
+# Link libraries
 TARGET_LINK_LIBRARIES(tp3 ${DGTAL_LIBRARIES})
