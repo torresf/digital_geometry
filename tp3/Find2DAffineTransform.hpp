@@ -1,1 +1,0 @@
-Eigen::Affine2d Find2DAffineTransform(const Eigen::Matrix2Xd &_in, const Eigen::Matrix2Xd &_out);

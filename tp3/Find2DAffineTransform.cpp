@@ -1,6 +1,3 @@
-
-#include "Find2DAffineTransform.hpp"
-
 // This code is released in public domain
 
 // Given two sets of 3D points, find the rotation + translation + scale
