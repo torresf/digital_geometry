@@ -19,6 +19,12 @@ typedef DomainRigidTransformation2D<Domain, ForwardTrans> DomainTransformer;
 typedef ConstImageAdapter<TypeImage, Domain, BackwardTrans, TypeImage::Value, Identity> ImageBackwardAdapter;
 typedef DomainTransformer::Bounds Bounds;
 
+// Step 5
+// Distance transform
+typedef IntervalForegroundPredicate<TypeImage> Binarizer;
+typedef DistanceTransformation<Space, Binarizer, L2Metric> DTL2;
+typedef HueShadeColorMap<DTL2::Value, 2> HueTwice;
+
 const Z2i::Point getTranslationBetweenComponents(Component &c1, Component &c2)
 {
   Z2i::Point centerOfMass0 = c1.getCenterOfMass();
@@ -32,6 +38,54 @@ const Eigen::Matrix2d getRotationBetweenComponents(Component &c1, Component &c2)
   Eigen::Matrix3d affine = Find2DAffineTransform(c1.getMatrixOfPoints(), c2.getMatrixOfPoints()).matrix();
   Eigen::Matrix2d rotation = affine.topLeftCorner(2, 2);
   return rotation;
+}
+
+// Inspired by this article on stackoverflow
+// https://stackoverflow.com/questions/46637401/hausdorff-distance-object-detection
+
+const int squaredEuclideanDistance(const Z2i::Point &p1, const Z2i::Point &p2)
+{
+  Z2i::Point d = p1 - p2;
+  return (d[0] * d[0]) + (d[1] * d[1]);
+}
+
+const int maxPointDistance(const Component &c1, const Component &c2)
+{
+  // Find the maximum distance
+  int maxDistance = 0;
+  for (Z2i::Point point : c1.largestObject)
+  {
+    // Find the minimum distance
+    int minDistance = numeric_limits<int>::max();
+
+    for (Z2i::Point tempPoint : c2.largestObject)
+    {
+      int distance = squaredEuclideanDistance(point, tempPoint);
+      if (distance < minDistance)
+      {
+        minDistance = distance;
+      }
+      if (distance == 0)
+      {
+        break;
+      }
+    }
+    maxDistance += minDistance;
+  }
+
+  return maxDistance;
+}
+
+// Step 5::1
+const float hausdorffDistance(const Component &c1, const Component &c2)
+{
+  // Hausdorff distance between two components
+  // Defined by dH(S1,S′2)=max{supx∈S1{infy∈S′2d(x,y)}, supy∈S′2{infx∈S1d(x,y)}}
+
+  float maxDistc1 = maxPointDistance(c1, c2);
+  float maxDistc2 = maxPointDistance(c2, c1);
+
+  return sqrt(max(maxDistc1, maxDistc2));
 }
 
 int main(int argc, char **argv)
@@ -68,7 +122,16 @@ int main(int argc, char **argv)
 
   // Step 4
   // Create transformation by providing information about origin, angle in radians, and translation
-  cle1.createImageBackwardAdapter(RealPoint(0, 0), -angleInRadian, translation);
+  const string reconstructedFilename = "cle1_transformed";
+  cle1.createImageBackwardAdapter(RealPoint(0, 0), -angleInRadian, translation, "");
+
+  // Step 5
+  // Compare the transformed image and the reference
+  Component reconstructedCle0("../TP3_images/created/" + reconstructedFilename + FORMAT);
+  //float distance = hausdorffDistance(cle0, cle1);
+  //cout << "Hausdorff distance is " << distance << endl;
+
+  DTL2 dt = reconstructedCle0.getDTL2();
 
   return 0;
 }

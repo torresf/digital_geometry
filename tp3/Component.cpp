@@ -4,7 +4,6 @@ using namespace functors;
 using namespace Z2i;
 
 typedef ImageSelector<Domain, unsigned char>::Type TypeImage;
-typedef Domain::ConstIterator DomainConstIterator;
 typedef DigitalSetSelector<Domain, BIG_DS + HIGH_BEL_DS>::Type DigitalSet;
 typedef Object<DT4_8, DigitalSet> ObjectType4_8;
 
@@ -16,6 +15,11 @@ typedef BackwardRigidTransformation2D<Space> BackwardTrans;
 typedef DomainRigidTransformation2D<Domain, ForwardTrans> DomainTransformer;
 typedef ConstImageAdapter<TypeImage, Domain, BackwardTrans, TypeImage::Value, Identity> ImageBackwardAdapter;
 typedef DomainTransformer::Bounds Bounds;
+
+// Step 5
+// Distance transform
+typedef IntervalForegroundPredicate<TypeImage> Binarizer;
+typedef DistanceTransformation<Space, Binarizer, L2Metric> DTL2;
 
 class Component
 {
@@ -30,7 +34,7 @@ public:
   {
 
     // STEP 2::2
-    // Convert a binary image to a "digital set" following the instruction of "DigitalSet from threholded image".
+    // Convert a binary image to a "digital set" following the instruction of "DigitalSet from thresholded image".
     // make a digital set from the image
     // Create a digital set of proper size
     Z2i::DigitalSet set2d(image.domain());
@@ -125,6 +129,13 @@ public:
     backwardImageAdapter >> "../TP3_images/created/" + imageName + FORMAT;
     cout << "Image created" << endl;
     return backwardImageAdapter;
+  }
+
+  const DTL2 getDTL2() const
+  {
+    Binarizer b(image, 254, 255);
+    DTL2 dt(&image.domain(), &b, &Z2i::l2Metric);
+    return dt;
   }
 
   vector<ObjectType4_8> objects; // All connected components are going to be stored in it
