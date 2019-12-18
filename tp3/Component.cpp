@@ -1,5 +1,6 @@
 using namespace std;
 using namespace DGtal;
+using namespace functors;
 using namespace Z2i;
 
 typedef ImageSelector<Domain, unsigned char>::Type TypeImage;
@@ -7,17 +8,26 @@ typedef Domain::ConstIterator DomainConstIterator;
 typedef DigitalSetSelector<Domain, BIG_DS + HIGH_BEL_DS>::Type DigitalSet;
 typedef Object<DT4_8, DigitalSet> ObjectType4_8;
 
+// Step 4
+// Define types for rigid transformation
+
+typedef ForwardRigidTransformation2D<Space> ForwardTrans;
+typedef BackwardRigidTransformation2D<Space> BackwardTrans;
+typedef DomainRigidTransformation2D<Domain, ForwardTrans> DomainTransformer;
+typedef ConstImageAdapter<TypeImage, Domain, BackwardTrans, TypeImage::Value, Identity> ImageBackwardAdapter;
+typedef DomainTransformer::Bounds Bounds;
+
 class Component
 {
 public:
   Component() = delete;
   Component(string filePath)
-  {
 
-    // STEP 2::1
-    // Use PGMReader to read each input image.
-    // read an image
-    TypeImage image = PGMReader<TypeImage>::importPGM(filePath);
+      // STEP 2::1
+      // Use PGMReader to read each input image.
+      // read an image
+      : image(PGMReader<TypeImage>::importPGM(filePath))
+  {
 
     // STEP 2::2
     // Convert a binary image to a "digital set" following the instruction of "DigitalSet from threholded image".
@@ -97,6 +107,27 @@ public:
     return m;
   }
 
+  const ImageBackwardAdapter createImageBackwardAdapter(const RealPoint &origin,
+                                                        float angleInRadian,
+                                                        const RealVector &translation,
+                                                        const string imageName = "backward_transform") const
+  {
+    cout << origin << endl;
+    cout << angleInRadian << endl;
+    cout << translation << endl;
+    const Identity idD;
+    const ForwardTrans forwardTrans(origin, angleInRadian, translation);
+    const BackwardTrans backwardTrans(origin, angleInRadian, translation);
+    const DomainTransformer domainTransformer(forwardTrans);
+    const Bounds bounds = domainTransformer(image.domain());
+    const Domain transformedDomain(bounds.first, bounds.second);
+    const ImageBackwardAdapter backwardImageAdapter(image, transformedDomain, backwardTrans, idD);
+    backwardImageAdapter >> "../TP3_images/created/" + imageName + FORMAT;
+    cout << "Image created" << endl;
+    return backwardImageAdapter;
+  }
+
   vector<ObjectType4_8> objects; // All connected components are going to be stored in it
   ObjectType4_8 largestObject;
+  TypeImage image;
 };

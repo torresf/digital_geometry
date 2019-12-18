@@ -2,18 +2,22 @@
 
 using namespace std;
 using namespace DGtal;
+using namespace functors;
 using namespace Z2i;
-
-const string PATH = "../TP3_images/binary/";
-const string CLE = "Cle_";
-const string PINCE = "Pince_";
-const string CUTTER = "Cutter_";
-const string FORMAT = ".pgm";
 
 typedef ImageSelector<Domain, unsigned char>::Type TypeImage;
 typedef Domain::ConstIterator DomainConstIterator;
 typedef DigitalSetSelector<Domain, BIG_DS + HIGH_BEL_DS>::Type DigitalSet;
 typedef Object<DT4_8, DigitalSet> ObjectType4_8;
+
+// Step 4
+// Define types for rigid transformation
+
+typedef ForwardRigidTransformation2D<Space> ForwardTrans;
+typedef BackwardRigidTransformation2D<Space> BackwardTrans;
+typedef DomainRigidTransformation2D<Domain, ForwardTrans> DomainTransformer;
+typedef ConstImageAdapter<TypeImage, Domain, BackwardTrans, TypeImage::Value, Identity> ImageBackwardAdapter;
+typedef DomainTransformer::Bounds Bounds;
 
 const Z2i::Point getTranslationBetweenComponents(Component &c1, Component &c2)
 {
@@ -41,7 +45,8 @@ int main(int argc, char **argv)
   // Step 3::1
   // Display the translation vector
 
-  cout << "Translation between cle0 and cle1 is " << getTranslationBetweenComponents(cle0, cle1) << endl;
+  Z2i::Point translation = getTranslationBetweenComponents(cle0, cle1);
+  cout << "Translation between cle0 and cle1 is " << translation << endl;
 
   Board2D aBoard;
   aBoard << cle0.largestObject;
@@ -55,8 +60,15 @@ int main(int argc, char **argv)
 
   // Step 3::2
   // Display the rotation matrix
-  cout << "Rotation  between cle0 and cle1 is " << endl
-       << getRotationBetweenComponents(cle0, cle1) << endl;
+  Eigen::Matrix2d rotation = getRotationBetweenComponents(cle0, cle1);
+  cout << "Rotation between cle0 and cle1 is " << endl;
+  cout << rotation << endl;
+  float angleInRadian = acos(rotation(0, 0));
+  cout << "Angle is " << angleInRadian << endl;
+
+  // Step 4
+  // Create transformation by providing information about origin, angle in radians, and translation
+  cle1.createImageBackwardAdapter(RealPoint(0, 0), -angleInRadian, translation);
 
   return 0;
 }

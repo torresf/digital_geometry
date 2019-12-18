@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "*.ih": "cpp"
+    "*.ih": "cpp",
+    "geometry": "cpp",
+    "string": "cpp"
   }
 }
